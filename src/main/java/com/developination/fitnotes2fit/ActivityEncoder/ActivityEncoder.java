@@ -1,5 +1,7 @@
 package com.developination.fitnotes2fit.ActivityEncoder;
 
+import com.developination.fitnotes2fit.util.FitMessage;
+import com.developination.fitnotes2fit.util.NoiseGenerator;
 import com.garmin.fit.ActivityMesg;
 import com.garmin.fit.DateTime;
 import com.garmin.fit.DeadliftExerciseName;
@@ -24,6 +26,7 @@ import com.garmin.fit.SetType;
 import com.garmin.fit.Sport;
 import com.garmin.fit.SubSport;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -35,103 +38,136 @@ import java.util.TimeZone;
 
 public class ActivityEncoder {
 
-  public static void CreateExampleStrengthActivity() {
-    final String filename = "ExampleStrengthActivity.fit";
+    public static void CreateExampleStrengthActivity() {
+        final String filename = "ExampleStrengthActivity.fit";
+        final String date = "2022-04-21" + "T14:00:00.000Z";
+        Instant dateInstant = Instant.parse(date);
 
-    List<Mesg> messages = new ArrayList<Mesg>();
-
-    DateTime startTime = new DateTime(new Date());
-    EventMesg eventMesgStart = new EventMesg();
-        eventMesgStart.setTimestamp(startTime);
-        eventMesgStart.setEvent(Event.TIMER);
-        eventMesgStart.setEventType(EventType.START);
-        messages.add(eventMesgStart);
-
-        // Session Accumulators
-        int sessionTotalElapsedTime = 0;
-
-        // Set accumulators
-        DateTime setStartTime = new DateTime(startTime);
-
-        DateTime timestamp = new DateTime(startTime);
-
-        RecordMesg recordMesg = new RecordMesg();
-        recordMesg.setTimestamp(timestamp);
-        recordMesg.setDistance(0f);
-        recordMesg.setHeartRate((short) 90);
-        messages.add(recordMesg);
-
-        List<Map<String, Object>> setData = getSetData();
-
-        for (Map<String, Object> set : setData) {
-
-            float duration = (float) set.get("duration");
-
-            SetMesg setMsg = new SetMesg();
-            setMsg.setTimestamp(timestamp);
-            setMsg.setDuration(duration);
-            setMsg.setStartTime(setStartTime);
-            setMsg.setRepetitions((int) set.get("reps"));
-            setMsg.setWeight((float) set.get("weight"));
-            setMsg.setCategory(0, (int) set.get("category"));
-            setMsg.setCategorySubtype(0, (int) set.get("subCategory"));
-            setMsg.setWeightDisplayUnit(1);
-            setMsg.setMessageIndex(setData.indexOf(set));
-            setMsg.setSetType((short) set.get("type"));
-            messages.add(setMsg);
-    
-            setStartTime.add(duration);
-    
-            sessionTotalElapsedTime += duration;
-
-        }
+        List<Mesg> messages = new ArrayList<Mesg>();
 
 
-        // Timer Events are a BEST PRACTICE for FIT ACTIVITY files
-        EventMesg eventMesgStop = new EventMesg();
-        eventMesgStop.setTimestamp(timestamp);
-        eventMesgStop.setEvent(Event.TIMER);
-        eventMesgStop.setEventType(EventType.STOP_ALL);
-        messages.add(eventMesgStop);
+        DateTime startTime = new DateTime(Date.from(dateInstant));
+        EventMesg eventMesgStart = new EventMesg();
+            eventMesgStart.setTimestamp(startTime);
+            eventMesgStart.setEvent(Event.TIMER);
+            eventMesgStart.setEventType(EventType.START);
+            messages.add(eventMesgStart);
 
-        timestamp.add(sessionTotalElapsedTime);
+            // Session Accumulators
+            int sessionTotalElapsedTime = 0;
 
-        // Every FIT ACTIVITY file MUST contain at least one Lap message
-        LapMesg lapMesg = new LapMesg();
-        lapMesg.setMessageIndex(0);
-        lapMesg.setTimestamp(timestamp);
-        lapMesg.setStartTime(startTime);
-        lapMesg.setTotalElapsedTime((float) (timestamp.getTimestamp() - startTime.getTimestamp()));
-        lapMesg.setTotalTimerTime((float) (timestamp.getTimestamp() - startTime.getTimestamp()));
-        messages.add(lapMesg);
+            // Set accumulators
+            DateTime setStartTime = new DateTime(startTime);
 
-        // Every FIT ACTIVITY file MUST contain at least one Session message
-        SessionMesg sessionMesg = new SessionMesg();
-        sessionMesg.setMessageIndex(0);
-        sessionMesg.setTimestamp(timestamp);
-        sessionMesg.setStartTime(startTime);
-        sessionMesg.setTotalElapsedTime((float) sessionTotalElapsedTime);
-        sessionMesg.setTotalTimerTime((float) sessionTotalElapsedTime);
-        sessionMesg.setTotalDistance(0f);
-        sessionMesg.setSport(Sport.TRAINING);
-        sessionMesg.setSubSport(SubSport.STRENGTH_TRAINING);
-        sessionMesg.setFirstLapIndex(0);
-        sessionMesg.setNumLaps(1);
-        messages.add(sessionMesg);
+            DateTime timestamp = new DateTime(startTime);
 
-        // Every FIT ACTIVITY file MUST contain EXACTLY one Activity message
-        ActivityMesg activityMesg = new ActivityMesg();
-        activityMesg.setTimestamp(timestamp);
-        activityMesg.setNumSessions(1);
-        TimeZone timeZone = TimeZone.getTimeZone("Europe/Athens");
-        long timezoneOffset = (timeZone.getRawOffset() + timeZone.getDSTSavings()) / 1000;
-        activityMesg.setLocalTimestamp(timestamp.getTimestamp() + timezoneOffset);
-        activityMesg.setTotalTimerTime((float) sessionTotalElapsedTime);
+            // RecordMesg recordMesg = new RecordMesg();
+            // recordMesg.setTimestamp(timestamp);
+            // recordMesg.setDistance(0f);
+            // recordMesg.setHeartRate((short) 90);
+            // messages.add(recordMesg);
 
-        messages.add(activityMesg);
+            List<Map<String, Object>> setData = getSetData();
+            int setIndex = 0;
+            Random random = new Random();
+            NoiseGenerator noiseGenerator = new NoiseGenerator();
 
-        CreateActivityFile(messages, filename, startTime);
-  }
+            for (Map<String, Object> set : setData) {
+
+                float duration = (float) set.get("duration");
+
+                // working set message
+                SetMesg setMsg = new SetMesg();
+                setMsg.setTimestamp(timestamp);
+                setMsg.setDuration(duration);
+                setMsg.setStartTime(setStartTime);
+                setMsg.setRepetitions((int) set.get("reps"));
+                setMsg.setWeight((float) set.get("weight"));
+                setMsg.setCategory(0, (int) set.get("category"));
+                setMsg.setCategorySubtype(0, (int) set.get("subCategory"));
+                setMsg.setWeightDisplayUnit(1);
+                setMsg.setMessageIndex(setIndex);
+                setMsg.setSetType((short) set.get("type"));
+                messages.add(setMsg);
+
+                setIndex++;
+
+                // record messages help with generating relative effort in strava
+                List<RecordMesg> recordMesges = FitMessage.generateRecordMessages(setStartTime, noiseGenerator, Math.round(duration), sessionTotalElapsedTime);
+                for (RecordMesg recordMesg : recordMesges) {
+                    messages.add(recordMesg);
+                }
+
+                // rest set message
+                setStartTime.add(duration);
+                float restTime = random.nextFloat()*300 % (300 - 180 + 1) + 180;
+                SetMesg restSetMsg = new SetMesg();
+                restSetMsg.setTimestamp(timestamp);
+                restSetMsg.setDuration(restTime);
+                restSetMsg.setStartTime(setStartTime);
+                restSetMsg.setMessageIndex(setIndex);
+                restSetMsg.setSetType(SetType.REST);
+                messages.add(restSetMsg);
+
+                recordMesges = FitMessage.generateRecordMessages(setStartTime, noiseGenerator, Math.round(restTime), sessionTotalElapsedTime);
+                for (RecordMesg recordMesg : recordMesges) {
+                    messages.add(recordMesg);
+                }
+        
+                setIndex++;
+                setStartTime.add(restTime);
+                sessionTotalElapsedTime += duration + restTime;
+
+            }
+
+
+            // Timer Events are a BEST PRACTICE for FIT ACTIVITY files
+            EventMesg eventMesgStop = new EventMesg();
+            eventMesgStop.setTimestamp(timestamp);
+            eventMesgStop.setEvent(Event.TIMER);
+            eventMesgStop.setEventType(EventType.STOP_ALL);
+            messages.add(eventMesgStop);
+
+            timestamp.add(sessionTotalElapsedTime);
+
+            // Every FIT ACTIVITY file MUST contain at least one Lap message
+            LapMesg lapMesg = new LapMesg();
+            lapMesg.setMessageIndex(0);
+            lapMesg.setTimestamp(timestamp);
+            lapMesg.setStartTime(startTime);
+            lapMesg.setTotalElapsedTime((float) (timestamp.getTimestamp() - startTime.getTimestamp()));
+            lapMesg.setTotalTimerTime((float) (timestamp.getTimestamp() - startTime.getTimestamp()));
+            messages.add(lapMesg);
+
+            // Every FIT ACTIVITY file MUST contain at least one Session message
+            SessionMesg sessionMesg = new SessionMesg();
+            sessionMesg.setMessageIndex(0);
+            sessionMesg.setTimestamp(timestamp);
+            sessionMesg.setStartTime(startTime);
+            sessionMesg.setTotalElapsedTime((float) sessionTotalElapsedTime);
+            sessionMesg.setTotalTimerTime((float) sessionTotalElapsedTime);
+            sessionMesg.setTotalDistance(0f);
+            sessionMesg.setSport(Sport.TRAINING);
+            sessionMesg.setSubSport(SubSport.STRENGTH_TRAINING);
+            sessionMesg.setFirstLapIndex(0);
+            sessionMesg.setNumLaps(1);
+            sessionMesg.setAvgHeartRate((short) 90);
+            sessionMesg.setTotalCalories(380);
+            messages.add(sessionMesg);
+
+            // Every FIT ACTIVITY file MUST contain EXACTLY one Activity message
+            ActivityMesg activityMesg = new ActivityMesg();
+            activityMesg.setTimestamp(timestamp);
+            activityMesg.setNumSessions(1);
+            TimeZone timeZone = TimeZone.getTimeZone("Europe/Athens");
+            long timezoneOffset = (timeZone.getRawOffset() + timeZone.getDSTSavings()) / 1000;
+            activityMesg.setLocalTimestamp(timestamp.getTimestamp() + timezoneOffset);
+            activityMesg.setTotalTimerTime((float) sessionTotalElapsedTime);
+
+            messages.add(activityMesg);
+
+            CreateActivityFile(messages, filename, startTime);
+    }
    
     public static void CreateActivityFile(List<Mesg> messages, String filename, DateTime startTime) {
         // The combination of file type, manufacturer id, product id, and serial number should be unique.
