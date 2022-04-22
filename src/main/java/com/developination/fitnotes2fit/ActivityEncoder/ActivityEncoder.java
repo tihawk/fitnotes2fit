@@ -28,6 +28,9 @@ import com.garmin.fit.SetMesg;
 import com.garmin.fit.Sport;
 import com.garmin.fit.SubSport;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +49,7 @@ public class ActivityEncoder {
         this.filename = activity.getActivityName() + ".fit";
     }
 
-    public void encodeActivity() {
+    public void encodeActivity(String outFolder) {
         if (activity.getSetList().isEmpty()) {
             return;
         }
@@ -150,11 +153,11 @@ public class ActivityEncoder {
         activityMesg.setTotalTimerTime((float) sessionTotalElapsedTime);
         messages.add(activityMesg);
 
-        CreateActivityFile(messages, filename, startTime);
+        CreateActivityFile(messages, filename, startTime, outFolder);
 
     }
    
-    public static void CreateActivityFile(List<Mesg> messages, String filename, DateTime startTime) {
+    public static void CreateActivityFile(List<Mesg> messages, String filename, DateTime startTime, String outFolder) {
         // The combination of file type, manufacturer id, product id, and serial number should be unique.
         // When available, a non-random serial number should be used.
         File fileType = File.ACTIVITY;
@@ -187,7 +190,12 @@ public class ActivityEncoder {
         FileEncoder encode;
 
         try {
-            encode = new FileEncoder(new java.io.File("target/" + filename), Fit.ProtocolVersion.V2_0);
+            java.io.File theFolder = new java.io.File(outFolder);
+            if (!theFolder.exists()) {
+                theFolder.mkdirs();
+            }
+            
+            encode = new FileEncoder(new java.io.File(Paths.get(outFolder, filename).toString()), Fit.ProtocolVersion.V2_0);
         } catch (FitRuntimeException e) {
             System.err.println("Error opening file " + filename);
             e.printStackTrace();
