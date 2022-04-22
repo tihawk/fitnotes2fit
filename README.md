@@ -9,7 +9,9 @@ FitNotes has the option to export all workouts into a csv file. So **FitNotes2Fi
 
 > **_NOTE:_** Currently this also generates a list of heart-rate records with average heart-rate of ~105 (hardcoded, with a relatively nice smooth noise function), to make use of Strava's relative effort metric.
 
-## Installation
+## Building for yourself
+
+Requires [Maven](https://maven.apache.org/install.html) and Java JDK.
 
 1. Clone the repo
 2. Go into repo folder `cd fitnotes2fit`.
