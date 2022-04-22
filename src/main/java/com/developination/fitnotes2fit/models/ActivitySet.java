@@ -16,10 +16,15 @@ public class ActivitySet {
     this.weight = weight;
     this.category = category;
     this.subCategory = subCategory;
-    this.duration = 60;
+    this.duration = 60f;
     this.type = SetType.ACTIVE;
   }
   
+  public ActivitySet() {
+    this.duration = 60f;
+    this.type = SetType.ACTIVE;
+  }
+
   public float getDuration() {
     return duration;
   }

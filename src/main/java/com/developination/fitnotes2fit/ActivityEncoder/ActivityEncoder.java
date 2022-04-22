@@ -47,6 +47,9 @@ public class ActivityEncoder {
     }
 
     public void encodeActivity() {
+        if (activity.getSetList().isEmpty()) {
+            return;
+        }
 
         // Start event
         DateTime startTime = activity.getActivityStartTime();
@@ -64,7 +67,10 @@ public class ActivityEncoder {
         NoiseGenerator noiseGenerator = new NoiseGenerator();
 
         for (ActivitySet set : activity.getSetList()) {
-            float duration = (float) set.getDuration();
+            if (set == null) {
+                continue;
+            }
+            float duration = set.getDuration();
 
             // working set message
             SetMesg setMsg = FitMessage.createSetMessage(set, timestamp, setStartTime, setIndex);

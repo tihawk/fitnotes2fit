@@ -1,24 +1,26 @@
 package com.developination.fitnotes2fit.models;
 
-public class FitNotesWorkout {
-  
-  protected String date;
-  protected String exercise;
-  protected String category;
-  protected float weight;
-  protected int reps;
-  protected float distance;
-  protected String distanceUnit;
-  protected float time;
+import com.opencsv.bean.CsvBindByName;
 
-  public FitNotesWorkout(String date, String exercise, String category, float weight, int reps) {
-    this.date = date;
-    this.exercise = exercise;
-    this.category = category;
-    this.weight = weight;
-    this.reps = reps;
-  }
+public class FitNotesSet {
   
+  @CsvBindByName(column = "Date", required = true)
+  protected String date;
+  @CsvBindByName(column = "Exercise", required = true)
+  protected String exercise;
+  @CsvBindByName(column = "Category")
+  protected String category;
+  @CsvBindByName(column = "Weight (kgs)"/* , required = true */)
+  protected float weight;
+  @CsvBindByName(column = "Reps"/* , required = true */)
+  protected int reps;
+  @CsvBindByName(column = "Distance")
+  protected float distance;
+  @CsvBindByName(column = "Distance Unit")
+  protected String distanceUnit;
+  @CsvBindByName(column = "Time")
+  protected String time;
+
   public String getDate() {
     return date;
   }
@@ -61,10 +63,10 @@ public class FitNotesWorkout {
   public void setDistanceUnit(String distanceUnit) {
     this.distanceUnit = distanceUnit;
   }
-  public float getTime() {
+  public String getTime() {
     return time;
   }
-  public void setTime(float time) {
+  public void setTime(String time) {
     this.time = time;
   }
 
