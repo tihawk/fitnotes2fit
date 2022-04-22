@@ -9,6 +9,19 @@ FitNotes has the option to export all workouts into a csv file. So `FitNotes2Fit
 
 > **_NOTE:_** Currently this also generates a list of heart-rate records with average heart-rate of ~100 (hardcoded, with a relatively nice smooth noise function), to make use of Strava's relative effort metric.
 
+## Installation
+
+1. Clone the repo
+2. Go into repo folder `cd fitnotes2fit`.
+3. Run `mvn clean install` to install dependencies.
+4. Run `mvn clean compile assembly:single` to create a jar with all the dependencies in it.
+
+## Running
+
+```java -jar target/fitnotes2fit-<version number>-jar-with-dependencies.jar```
+
+This will show you the usage.
+
 More documentation to come.
 
 ## TODO
@@ -23,7 +36,7 @@ More documentation to come.
  ## Links
 
  [FitNotes App](https://play.google.com/store/apps/details?id=com.github.jamesgay.fitnotes&hl=en_US&gl=US)
- 
+
  [FitSDK](https://developer.garmin.com/fit/overview/)
 
  [OpenCSV docs](http://opencsv.sourceforge.net/#reading_into_beans)
