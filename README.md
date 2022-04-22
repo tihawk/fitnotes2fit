@@ -3,9 +3,9 @@
 Status: working proof of concept
 ---
 
-This project allows for converting workouts recorded on FitNotes to be made into `fit` format, applicable in Garmin Connect and Strava for example.
+This project allows for converting workouts recorded on the [FitNotes](https://play.google.com/store/apps/details?id=com.github.jamesgay.fitnotes&hl=en_US&gl=US) app to be made into `fit` format, applicable in Garmin Connect and Strava for example.
 
-FitNotes has the option to export all workouts into a csv file. So `FitNotes2Fit` parses the `csv` file, and encodes a `fit` file using the **FitSDK** for `java`, containing the sets, reps and weights for each exercise recorded.
+FitNotes has the option to export all workouts into a csv file. So `FitNotes2Fit` parses the `csv` file, and encodes a `fit` file using the [**FitSDK**](https://developer.garmin.com/fit/overview/) for `java`, containing the sets, reps and weights for each exercise recorded.
 
 > **_NOTE:_** Currently this also generates a list of heart-rate records with average heart-rate of ~100 (hardcoded, with a relatively nice smooth noise function), to make use of Strava's relative effort metric.
 
@@ -19,3 +19,13 @@ More documentation to come.
  - [ ] Document process
  - [ ] Document code
  - [ ] Host online
+
+ ## Links
+
+ [FitNotes App](https://play.google.com/store/apps/details?id=com.github.jamesgay.fitnotes&hl=en_US&gl=US)
+ 
+ [FitSDK](https://developer.garmin.com/fit/overview/)
+
+ [OpenCSV docs](http://opencsv.sourceforge.net/#reading_into_beans)
+
+ [Additional Fit docs](https://apizone.suunto.com/fit-description)
