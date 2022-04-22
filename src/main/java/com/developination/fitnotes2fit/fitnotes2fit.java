@@ -3,15 +3,11 @@ package com.developination.fitnotes2fit;
 import java.nio.file.Path;
 import java.util.List;
 
-import com.developination.fitnotes2fit.ActivityEncoder.ActivityEncoder;
-import com.developination.fitnotes2fit.FitNotesParser.FitNotesParser;
 import com.developination.fitnotes2fit.controllers.Convert;
-import com.developination.fitnotes2fit.models.Activity;
 import com.developination.fitnotes2fit.util.CLI;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(
