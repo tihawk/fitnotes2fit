@@ -1,0 +1,4 @@
+lib/*
+!lib/fit.jar
+target/
+.vscode/
