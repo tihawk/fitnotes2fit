@@ -28,8 +28,6 @@ import com.garmin.fit.SetMesg;
 import com.garmin.fit.Sport;
 import com.garmin.fit.SubSport;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -139,7 +137,7 @@ public class ActivityEncoder {
         sessionMesg.setSubSport(SubSport.STRENGTH_TRAINING);
         sessionMesg.setFirstLapIndex(0);
         sessionMesg.setNumLaps(1);
-        sessionMesg.setAvgHeartRate((short) 90);
+        sessionMesg.setAvgHeartRate((short) 105);
         sessionMesg.setTotalCalories(380);
         messages.add(sessionMesg);
 
