@@ -30,13 +30,15 @@ This will show you the usage.
 
 ### Converting a CSV into a set of _fit_ files
 
-```java -jar fitnotes2fit.jar convert -i <path/to/file.csv> [-o <optional/output/dir/>] [-hr <average heartrate>] [-rt <average rest time>]```
+```java -jar fitnotes2fit.jar convert -i <path/to/file.csv> [-o <optional/output/dir/>] [-hr <average heartrate>] [-rt <average rest time (in minutes)>]```
 
-This will take the csv provided by `-i <path/to/file.csv>`, and will convert it to a set of fit files, one for each workout (distinguished by the _Date_ column in the csv). The optional argument `-o <optional/output/dir/>` specifies the output folder. Otherwise the current directory will be used.
+- This will take the csv provided by `-i <path/to/file.csv>`, and will convert it to a set of fit files, one for each workout (distinguished by the _Date_ column in the csv).
 
-The other two optional arguments are for "advanced" usage. If provided an average heart-rate, using `-hr <average heartrate>`, the converter will generate a set of "heart-rate-monitor" records around that average, and encode them within the output workouts.
+- The optional argument `-o <optional/output/dir/>` specifies the output folder. Otherwise the current directory will be used.
 
-If provided with an average rest between sets time with `-rt <average rest time>`, a random rest around that time (plus minus 1 minute) will be generated for each set. This helps with encoding a more appropriate time for the workout, which is useful for example in Strava, where the Relative Effort metric uses the heart-rate and time of activity to be calculated.
+- The other two optional arguments are for "advanced" usage. If provided an average heart-rate, using `-hr <average heartrate>`, the converter will generate a set of "heart-rate-monitor" records around that average, and encode them within the output workouts.
+
+- Average rest time in minutes (e.g. 1.5) can be provided with `-rt <average rest time>`. If provided, a random rest around that time (plus minus 1 minute) will be generated for each set. This helps with encoding a more appropriate time for the workout, which is useful for example in Strava, where the Relative Effort metric uses the heart-rate and time of activity to be calculated.
 
 ### Important limitations
 
