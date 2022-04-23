@@ -4,6 +4,7 @@ import com.developination.fitnotes2fit.models.Activity;
 import com.developination.fitnotes2fit.models.ActivitySet;
 import com.developination.fitnotes2fit.util.DataConverter;
 import com.developination.fitnotes2fit.util.FitMessage;
+import com.developination.fitnotes2fit.util.Helpers;
 import com.developination.fitnotes2fit.util.NoiseGenerator;
 import com.garmin.fit.ActivityMesg;
 import com.garmin.fit.DateTime;
@@ -37,14 +38,28 @@ import java.util.TimeZone;
 
 public class ActivityEncoder {
 
-    protected List<Mesg> messages;
-    protected Activity activity;
-    protected String filename;
+    private List<Mesg> messages;
+    private Activity activity;
+    private String filename;
+    private short avgHeartRate;
+    private boolean shouldGenerateRecords = false;
+    private float avgRestTime;
+    private boolean shouldGenerateRests = false;
 
-    public ActivityEncoder(Activity activity) {
+    public ActivityEncoder(Activity activity, short avgHeartRate, float avgRestTime) {
         this.activity = activity;
         this.messages = new ArrayList<Mesg>();
         this.filename = activity.getActivityName() + ".fit";
+
+        if (avgHeartRate != 0) {
+            this.avgHeartRate = avgHeartRate;
+            this.shouldGenerateRecords = true;
+        }
+
+        if (avgRestTime != 0) {
+            this.avgRestTime = avgRestTime;
+            this.shouldGenerateRests = true;
+        }
     }
 
     public void encodeActivity(String outFolder) {
@@ -60,6 +75,7 @@ public class ActivityEncoder {
         eventMesgStart.setEventType(EventType.START);
         messages.add(eventMesgStart);
 
+        
         // Accumulators
         int sessionTotalElapsedTime = 0;
         DateTime setStartTime = new DateTime(startTime);
@@ -67,36 +83,47 @@ public class ActivityEncoder {
         int setIndex = 0;
         NoiseGenerator noiseGenerator = new NoiseGenerator();
 
+        // generate a single record, since some online platforms require at least one
+        messages.add(FitMessage.generateRecordMessages(setStartTime, noiseGenerator, 1, sessionTotalElapsedTime, (short) 0).get(0));
+
         for (ActivitySet set : activity.getSetList()) {
             if (set == null) {
                 continue;
             }
             float duration = set.getDuration();
+            float restTime = 0f;
 
             // working set message
             SetMesg setMsg = FitMessage.createSetMessage(set, timestamp, setStartTime, setIndex);
             messages.add(setMsg);
 
-            // record messages help with generating relative effort in strava
-            List<RecordMesg> recordMesges = FitMessage.generateRecordMessages(
-                setStartTime, noiseGenerator, Math.round(duration), sessionTotalElapsedTime);
-            for (RecordMesg recordMesg : recordMesges) {
-                messages.add(recordMesg);
+            if (shouldGenerateRecords) {
+                // record messages help with generating relative effort in strava
+                List<RecordMesg> recordMesges = FitMessage.generateRecordMessages(
+                    setStartTime, noiseGenerator, Math.round(duration), sessionTotalElapsedTime, avgHeartRate);
+                for (RecordMesg recordMesg : recordMesges) {
+                    messages.add(recordMesg);
+                }
             }
 
-            // increment time and set index for rest set
-            setIndex++;
-            setStartTime.add(duration);
-            // rest set message
-            SetMesg restSetMsg = FitMessage.generateRestSetMessages(timestamp, setStartTime, setIndex);
-            messages.add(restSetMsg);
+            if (shouldGenerateRests) {
+                // increment time and set index for rest set
+                setIndex++;
+                setStartTime.add(duration);
+                // rest set message
+                SetMesg restSetMsg = FitMessage.generateRestSetMessage(timestamp, setStartTime, setIndex, avgRestTime);
+                messages.add(restSetMsg);
+                // reset restTime with generated
+                restTime = restSetMsg.getDuration();
+            }
             
-            // more record messages for during rest
-            float restTime = restSetMsg.getDuration();
-            recordMesges = FitMessage.generateRecordMessages(
-                setStartTime, noiseGenerator, Math.round(restTime), sessionTotalElapsedTime + Math.round(duration));
-            for (RecordMesg recordMesg : recordMesges) {
-                messages.add(recordMesg);
+            if(shouldGenerateRecords) {
+                // more record messages for during rest
+                List<RecordMesg> recordMesges = FitMessage.generateRecordMessages(
+                    setStartTime, noiseGenerator, Math.round(restTime), sessionTotalElapsedTime + Math.round(duration), avgHeartRate);
+                for (RecordMesg recordMesg : recordMesges) {
+                    messages.add(recordMesg);
+                }
             }
 
             // increment for next iteration
@@ -138,7 +165,7 @@ public class ActivityEncoder {
         sessionMesg.setFirstLapIndex(0);
         sessionMesg.setNumLaps(1);
         sessionMesg.setAvgHeartRate((short) 105);
-        sessionMesg.setTotalCalories(380);
+        sessionMesg.setTotalCalories(Helpers.generateCaloriesBurned(sessionTotalElapsedTime));
         messages.add(sessionMesg);
 
         // Every FIT ACTIVITY file MUST contain EXACTLY one Activity message
