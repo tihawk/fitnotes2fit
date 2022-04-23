@@ -28,7 +28,8 @@ public class FitMessage {
     return setMsg;
   }
   
-  public static List<RecordMesg> generateRecordMessages(DateTime setStartTime, NoiseGenerator noiseGenerator, int range, int totalElapsedTime) {
+  public static List<RecordMesg> generateRecordMessages(
+    DateTime setStartTime, NoiseGenerator noiseGenerator, int range, int totalElapsedTime, short avgHeartRate) {
 
     RecordMesg recordMesg = new RecordMesg();
     List<RecordMesg> result = new ArrayList<RecordMesg>();
@@ -36,7 +37,7 @@ public class FitMessage {
     DateTime recordTime = new DateTime(setStartTime);
     for (int i = 0; i <= range; i++) {
         recordTime.add(1);
-        short heartRate = noiseGenerator.noise(i+totalElapsedTime, 90, 120);
+        short heartRate = noiseGenerator.noise(i+totalElapsedTime, avgHeartRate - 15, avgHeartRate + 15);
         recordMesg = new RecordMesg();
         recordMesg.setTimestamp(recordTime);
         recordMesg.setDistance(0f);
@@ -47,10 +48,12 @@ public class FitMessage {
     return result;
   }
 
-  public static SetMesg generateRestSetMessages(DateTime timestamp, DateTime setStartTime, int setIndex) {
+  public static SetMesg generateRestSetMessage(DateTime timestamp, DateTime setStartTime, int setIndex, float avgRestTimeMinutes) {
     Random random = new Random();
+    float maxRestTime = avgRestTimeMinutes * 60 + 60;
+    float minRestTime = maxRestTime - 120;
     
-    float restTime = random.nextFloat()*300 % (300 - 180 + 1) + 180;
+    float restTime = random.nextFloat()*1000 % (maxRestTime - minRestTime + 1) + minRestTime;
     SetMesg restSetMsg = new SetMesg();
     restSetMsg.setTimestamp(timestamp);
     restSetMsg.setDuration(restTime);
