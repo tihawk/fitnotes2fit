@@ -4,7 +4,7 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-      - 'fitnotes2fit-[0-9]+.[0-9]+.[0-9]+*' # Push events to any matching semantic tag. For example, 1.10.1 or 2.0.0 or 3.0.0-alpha.
+      - '[0-9]+.[0-9]+.[0-9]+*' # Push events to any matching semantic tag. For example, 1.10.1 or 2.0.0 or 3.0.0-alpha.
         # For more details, see https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
         # and https://docs.npmjs.com/about-semantic-versioning
 
@@ -51,5 +51,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: ./target/fitnotes2fit.jar
-          asset_name: ${{ steps.getTagname.outputs.tag }}.jar
+          asset_name: fitnotes2fit-${{ steps.getTagname.outputs.tag }}.jar
           asset_content_type: application/java-archive
