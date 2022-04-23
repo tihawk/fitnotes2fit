@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build full jar
-        run: ./mvnw clean install && ./mvnw clean compile assembly:single
+        run: ./mvnw install:install-file -Dfile=lib/fit.jar -DgroupId=com.garmin -DartifactId=garmin-fit -Dversion=21.78.00 -Dpackaging=jar && ./mvnw compile assembly:single
       - name: Create release
         id: create_release
         uses: actions/create-release@latest
