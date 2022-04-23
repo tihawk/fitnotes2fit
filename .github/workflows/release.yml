@@ -26,11 +26,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build changelog
-      id: changelog
-      uses: loopwerk/tag-changelog@v1.0.4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        config_file: .github/tag-changelog-config.js
+        id: changelog
+        uses: loopwerk/tag-changelog@v1.0.4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config_file: .github/tag-changelog-config.js
       - name: Build full jar
         run: ./mvnw install:install-file -Dfile=lib/fit.jar -DgroupId=com.garmin -DartifactId=garmin-fit -Dversion=21.78.00 -Dpackaging=jar && ./mvnw compile assembly:single
       - name: Create release
