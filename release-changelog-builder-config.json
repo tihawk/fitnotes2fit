@@ -1,0 +1,77 @@
+{
+  "categories": [
+    {
+      "title": "## 🚀 Autodeployment",
+      "labels": ["area: autodeployment"]
+    },
+    {
+      "title": "## 🛠 CLI",
+      "labels": ["area: cli"]
+    },
+    {
+      "title": "## ⚡ CI/CD",
+      "labels": ["area: CI/CD"]
+    },
+    {
+      "title": "## 🚀 Deployment",
+      "labels": ["area: deployment"]
+    },
+    {
+      "title": "## 🎭 CSV",
+      "labels": ["area: scv"]
+    },
+    {
+      "title": "## ⚙ FIT",
+      "labels": ["area: fit"]
+    },
+    {
+      "title": "## 🏎 Performance",
+      "labels": ["area: performance"]
+    },
+    {
+      "title": "## 🖇 Dependencies",
+      "labels": ["dependencies"]
+    },
+    {
+      "title": "## 🐛 Bug Fixes",
+      "labels": ["type: bug"]
+    },
+    {
+      "title": "## 📃 Documentation Updates",
+      "labels": ["type: documentation (docs)"]
+    },
+    {
+      "title": "## ✨ Enhancements",
+      "labels": ["type: enhancement"]
+    },
+    {
+      "title": "## 💡 Nice to Have",
+      "labels": ["type: nice to have"]
+    },
+    {
+      "title": "## 🔐 Security Enhancements",
+      "labels": ["type: security"]
+    },
+    {
+      "title": "## 🛡 Tests",
+      "labels": ["type: test"]
+    }
+  ],
+  "ignore_labels": ["ignore"],
+  "sort": "ASC",
+  "template": "${{CATEGORIZED_COUNT}} changes since ${{FROM_TAG}}\n\n${{CHANGELOG}}\n\n## Other Updates\n\n${{UNCATEGORIZED}}\n",
+  "pr_template": "- ${{TITLE}} (#${{NUMBER}})",
+  "empty_template": "No Changes",
+  "label_extractor": [
+    {
+      "pattern": "(.) (.+)",
+      "target": "$1"
+    }
+  ],
+  "max_tags_to_fetch": 200,
+  "max_pull_requests": 250,
+  "max_back_track_time_days": 90,
+  "tag_resolver": {
+    "method": "semver"
+  }
+}
