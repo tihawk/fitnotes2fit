@@ -17,10 +17,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup Java JDK
-          uses: actions/setup-java@v1.4.2
-          with:
-            java-version: 11                    
-            server-id: github
+        uses: actions/setup-java@v1.4.2
+        with:
+          java-version: 11                    
+          server-id: github
       - name: Build changelog
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@main
