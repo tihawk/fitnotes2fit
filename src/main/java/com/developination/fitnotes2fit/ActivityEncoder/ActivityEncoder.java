@@ -172,7 +172,7 @@ public class ActivityEncoder {
         ActivityMesg activityMesg = new ActivityMesg();
         activityMesg.setTimestamp(timestamp);
         activityMesg.setNumSessions(1);
-        TimeZone timeZone = TimeZone.getTimeZone("Europe/Athens");
+        TimeZone timeZone = TimeZone.getDefault();
         long timezoneOffset = (timeZone.getRawOffset() + timeZone.getDSTSavings()) / 1000;
         activityMesg.setLocalTimestamp(timestamp.getTimestamp() + timezoneOffset);
         activityMesg.setTotalTimerTime((float) sessionTotalElapsedTime);
