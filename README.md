@@ -11,16 +11,20 @@ FitNotes has the option to export all workouts into a csv file. So **FitNotes2Fi
 
 ## Building for yourself
 
-Requires [Maven](https://maven.apache.org/install.html) and Java JDK.
+> **_NOTE:_** Requires [Maven](https://maven.apache.org/install.html) and Java JDK. If you don't have those, just get a [release](#get-release) version.
 
 1. Clone the repo
 2. Go into repo folder `cd fitnotes2fit`.
 3. Run `mvn clean install` to install dependencies.
-4. Run `mvn clean compile assembly:single` to create a jar with all the dependencies in it.
+4. Run `mvn clean compile assembly:single` to create a jar with all the dependencies in it. This will create a uber-jar at `target/fitnotes2fit.jar`.
+
+## Get it from one of the releases {#get-release}
+
+This repository contains [Releases](https://github.com/tihawk/fitnotes2fit/releases), from which you can directly download the uber-jar, and run it with [Java JRE](https://www.java.com/en/download/).
 
 ## Running
 
-```java -jar target/fitnotes2fit-<version number>-jar-with-dependencies.jar```
+```java -jar target/fitnotes2fit.jar```
 
 This will show you the usage.
 
