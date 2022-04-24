@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.developination.fitnotes2fit"},{"l":"com.developination.fitnotes2fit.ActivityEncoder"},{"l":"com.developination.fitnotes2fit.controllers"},{"l":"com.developination.fitnotes2fit.FitNotesParser"},{"l":"com.developination.fitnotes2fit.models"},{"l":"com.developination.fitnotes2fit.util"}]
