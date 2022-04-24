@@ -9,18 +9,9 @@ FitNotes has the option to export all workouts into a csv file. So **FitNotes2Fi
 
 Additionally, by supplying an average heart-rate and average rest-time between sets, these can also be encoded into the fit file, to be used by the online platform they get uploaded to. For example, Strava uses the recorded set of heart-rate levels over time to record relative effort for each workout.
 
-## Building for yourself
-
-> **_NOTE:_** Requires [Maven](https://maven.apache.org/install.html) and Java JDK. If you don't have those, just get a _Release_ version.
-
-1. Clone the repo
-2. Go into repo folder `cd fitnotes2fit`.
-3. Run `mvn clean install` to install dependencies.
-4. Run `mvn clean compile assembly:single` to create a jar with all the dependencies in it. This will create a uber-jar at `target/fitnotes2fit.jar`.
-
 ## Get it from one of the releases
 
-This repository contains [Releases](https://github.com/tihawk/fitnotes2fit/releases), from which you can directly download the uber-jar, and run it with [Java JRE](https://www.java.com/en/download/).
+This repository contains [Releases](https://github.com/tihawk/fitnotes2fit/releases/latest), from which you can directly download the latest uber-jar, and run it with [Java JRE](https://www.java.com/en/download/).
 
 ## Running
 
@@ -39,6 +30,21 @@ This will show you the usage.
 - The other two optional arguments are for "advanced" usage. If provided an average heart-rate, using `-hr <average heartrate>`, the converter will generate a set of "heart-rate-monitor" records around that average, and encode them within the output workouts.
 
 - Average rest time in minutes (e.g. 1.5) can be provided with `-rt <average rest time>`. If provided, a random rest around that time (plus minus 1 minute) will be generated for each set. This helps with encoding a more appropriate time for the workout, which is useful for example in Strava, where the Relative Effort metric uses the heart-rate and time of activity to be calculated.
+
+# For developers
+## Building for yourself
+
+1. Clone the repo
+2. Go into repo folder `cd fitnotes2fit`.
+3. Run `./mvnw process-resources && ./mvnw install` to install dependencies.
+4. Run `./mvnw clean compile assembly:single` to create a jar with all the dependencies in it. This will create a uber-jar at `target/fitnotes2fit.jar`.
+  - If a non-uber jar is required, you can simply run `./mvnw clean package`.
+
+## Packages
+
+A package for **fitnotes2fit** is also available to get from the GitHub repository [here](https://github.com/tihawk/fitnotes2fit/packages/).
+
+Since the package relies on FitSDK, and the SDK is not available in any repository, you will need to add it as a local dependency in your project. More information should be available in the package documentation.
 
 ### Important limitations
 
