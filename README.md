@@ -34,10 +34,13 @@ This will show you the usage.
 # For developers
 ## Building for yourself
 
-1. Clone the repo
-2. Go into repo folder `cd fitnotes2fit`.
-3. Run `./mvnw process-resources && ./mvnw install` to install dependencies.
-4. Run `./mvnw clean compile assembly:single` to create a jar with all the dependencies in it. This will create a uber-jar at `target/fitnotes2fit.jar`.
+> **_Note:_** Since this project relies on FitSDK, and the sdk is not available from any maven repository, you will have to download it yourself from the FitSDK site.
+
+1. Clone the repo.
+1. Download [FitSDK](https://developer.garmin.com/fit/download/), unzip and place the file `<fitsdk-dir>/java/fit.jar` into `<fitnotes2fit-repo-dir>/lib/fit.jar`.
+1. Go into repo folder `cd fitnotes2fit`.
+1. Run `./mvnw process-resources && ./mvnw install` to install dependencies.
+1. Run `./mvnw clean compile assembly:single` to create a jar with all the dependencies in it. This will create a uber-jar at `target/fitnotes2fit.jar`.
   - If a non-uber jar is required, you can simply run `./mvnw clean package`.
 
 ## Packages
