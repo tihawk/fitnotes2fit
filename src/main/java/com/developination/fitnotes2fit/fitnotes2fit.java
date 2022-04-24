@@ -20,6 +20,10 @@ public class fitnotes2fit implements Runnable {
     @Parameters
     private List<Path> files;
 
+    
+    /** 
+     * @param args
+     */
     public static void main( String[] args ){
         CommandLine.run(new fitnotes2fit(), args);
     }

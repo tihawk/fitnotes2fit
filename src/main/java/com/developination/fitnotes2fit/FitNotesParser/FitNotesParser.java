@@ -71,6 +71,14 @@ public class FitNotesParser {
         EXERCISE_TO_FIT_CATEGORY_MAP = Collections.unmodifiableMap( tempMap );
     }
 
+  
+  /** 
+   * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
+   * 
+   * @param filepath
+   * @return List<Activity>
+   * @throws Exception
+   */
   public static List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
     List<Activity> result = new ArrayList<Activity>();
     List<FitNotesSet> setsList = readFileNotesSets(filepath);
@@ -97,6 +105,13 @@ public class FitNotesParser {
     return result;
   }
 
+  
+  /** 
+   * Converts a parsed FitNotes set object into an Activity set, encodable into the FIT format
+   * 
+   * @param fitNotesSet
+   * @return ActivitySet
+   */
   public static ActivitySet convertFromFitNotesSet(FitNotesSet fitNotesSet) {
     if (!EXERCISE_TO_FIT_CATEGORY_MAP.containsKey(fitNotesSet.getExercise())) {
       System.out.println("[FitNotesParser][convertFromFitNotesSet] Didn't find mapping for exercise " + fitNotesSet.getExercise());
@@ -114,6 +129,14 @@ public class FitNotesParser {
     return result;
   }
 
+  
+  /** 
+   * Reads a FitNotes csv file into a list of FitNotes sets
+   * 
+   * @param filepath
+   * @return List<FitNotesSet>
+   * @throws Exception
+   */
   public static List<FitNotesSet> readFileNotesSets(String filepath) throws Exception {
     Reader reader = new BufferedReader(new FileReader(filepath));
     CsvToBean<FitNotesSet> csvReader = new CsvToBeanBuilder<FitNotesSet>(reader)

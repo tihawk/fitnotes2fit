@@ -21,51 +21,115 @@ public class FitNotesSet {
   @CsvBindByName(column = "Time")
   protected String time;
 
+  
+  /** 
+   * @return String
+   */
   public String getDate() {
     return date;
   }
+  
+  /** 
+   * @param date
+   */
   public void setDate(String date) {
     this.date = date;
   }
+  
+  /** 
+   * @return String
+   */
   public String getExercise() {
     return exercise;
   }
+  
+  /** 
+   * @param exercise
+   */
   public void setExercise(String exercise) {
     this.exercise = exercise;
   }
+  
+  /** 
+   * @return String
+   */
   public String getCategory() {
     return category;
   }
+  
+  /** 
+   * @param category
+   */
   public void setCategory(String category) {
     this.category = category;
   }
+  
+  /** 
+   * @return float
+   */
   public float getWeight() {
     return weight;
   }
+  
+  /** 
+   * @param weight
+   */
   public void setWeight(float weight) {
     this.weight = weight;
   }
+  
+  /** 
+   * @return int
+   */
   public int getReps() {
     return reps;
   }
+  
+  /** 
+   * @param reps
+   */
   public void setReps(int reps) {
     this.reps = reps;
   }
+  
+  /** 
+   * @return float
+   */
   public float getDistance() {
     return distance;
   }
+  
+  /** 
+   * @param distance
+   */
   public void setDistance(float distance) {
     this.distance = distance;
   }
+  
+  /** 
+   * @return String
+   */
   public String getDistanceUnit() {
     return distanceUnit;
   }
+  
+  /** 
+   * @param distanceUnit
+   */
   public void setDistanceUnit(String distanceUnit) {
     this.distanceUnit = distanceUnit;
   }
+  
+  /** 
+   * @return String
+   */
   public String getTime() {
     return time;
   }
+  
+  /** 
+   * @param time
+   */
   public void setTime(String time) {
     this.time = time;
   }

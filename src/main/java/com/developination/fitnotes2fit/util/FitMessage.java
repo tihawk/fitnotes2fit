@@ -12,6 +12,16 @@ import com.garmin.fit.SetType;
 
 public class FitMessage {
 
+  
+  /** 
+   * Generates a set FIT Mesg for workouts based on sets of repetitions
+   * 
+   * @param set
+   * @param timestamp
+   * @param setStartTime
+   * @param setIndex
+   * @return SetMesg
+   */
   public static SetMesg createSetMessage(ActivitySet set, DateTime timestamp, DateTime setStartTime, int setIndex) {
     SetMesg setMsg = new SetMesg();
     setMsg.setTimestamp(timestamp);
@@ -28,6 +38,17 @@ public class FitMessage {
     return setMsg;
   }
   
+  
+  /** 
+   * Generates a list of FIT Record Mesgs, which are used to record the heart-rate at a certain time during an activity
+   * 
+   * @param setStartTime
+   * @param noiseGenerator
+   * @param range
+   * @param totalElapsedTime
+   * @param avgHeartRate
+   * @return List<RecordMesg>
+   */
   public static List<RecordMesg> generateRecordMessages(
     DateTime setStartTime, NoiseGenerator noiseGenerator, int range, int totalElapsedTime, short avgHeartRate) {
 
@@ -48,6 +69,16 @@ public class FitMessage {
     return result;
   }
 
+  
+  /** 
+   * Generates a FIT set Mesg of type REST, meaning this is the rest period between sets
+   * 
+   * @param timestamp
+   * @param setStartTime
+   * @param setIndex
+   * @param avgRestTimeMinutes
+   * @return SetMesg
+   */
   public static SetMesg generateRestSetMessage(DateTime timestamp, DateTime setStartTime, int setIndex, float avgRestTimeMinutes) {
     Random random = new Random();
     float maxRestTime = avgRestTimeMinutes * 60 + 60;

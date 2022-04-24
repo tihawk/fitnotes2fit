@@ -62,6 +62,12 @@ public class ActivityEncoder {
         }
     }
 
+    
+    /** 
+     * Encodes the Activity provided in the constructor into FIT format, and outputs a .fit file to the outFolder
+     * 
+     * @param outFolder
+     */
     public void encodeActivity(String outFolder) {
         if (activity.getSetList().isEmpty()) {
             return;
@@ -182,6 +188,15 @@ public class ActivityEncoder {
 
     }
    
+    
+    /** 
+     * Generates a FIT format file from FIT Mesgs, and outputs it to a file in the outFolder
+     * 
+     * @param messages
+     * @param filename
+     * @param startTime
+     * @param outFolder
+     */
     public static void CreateActivityFile(List<Mesg> messages, String filename, DateTime startTime, String outFolder) {
         // The combination of file type, manufacturer id, product id, and serial number should be unique.
         // When available, a non-random serial number should be used.
@@ -245,6 +260,10 @@ public class ActivityEncoder {
         System.out.println("Encoded FIT Activity file " + filename);
     }
 
+    
+    /** 
+     * @return Activity
+     */
     public static Activity getExampleActivity() {
         Activity activity = new Activity(DataConverter.convertDateTime("2022-04-21"), getExampleSetData());
         return activity;

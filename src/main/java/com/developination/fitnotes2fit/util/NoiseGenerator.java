@@ -50,14 +50,30 @@ public class NoiseGenerator {
 
 	}
 	
+	
+	/** 
+	 * @param seed
+	 */
 	public void setSeed(double seed) {
 		this.seed = seed;
 	}
 	
+	
+	/** 
+	 * @return double
+	 */
 	public double getSeed() {
 		return this.seed;
 	}
 
+	
+	/** 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param size
+	 * @return double
+	 */
 	public double noise(double x, double y, double z, int size) {
 		double value = 0.0;
 		double initialSize = size;
@@ -70,6 +86,13 @@ public class NoiseGenerator {
 		return value / initialSize;
 	}
 
+	
+	/** 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return double
+	 */
 	public double noise(double x, double y, double z) {
 		double value = 0.0;
 		double size = default_size;
@@ -83,6 +106,12 @@ public class NoiseGenerator {
 		return value / initialSize;
 	}
 
+	
+	/** 
+	 * @param x
+	 * @param y
+	 * @return double
+	 */
 	public double noise(double x, double y) {
 		double value = 0.0;
 		double size = default_size;
@@ -96,6 +125,11 @@ public class NoiseGenerator {
 		return value / initialSize;
 	}
 
+	
+	/** 
+	 * @param x
+	 * @return double
+	 */
 	public double noise(double x) {
 			double value = 0.0;
 			double size = default_size;
@@ -109,6 +143,15 @@ public class NoiseGenerator {
 			return value / initialSize;
 	}
 
+	
+	/** 
+	 * Generates the next value in a set of heart-rate-like data points between a minimal and maximal values.
+	 * 
+	 * @param x
+	 * @param minVal
+	 * @param maxVal
+	 * @return short
+	 */
 	public short noise(int x, int minVal, int maxVal) {
 		double value = 0.0;
 		double size = default_size;
@@ -125,6 +168,13 @@ public class NoiseGenerator {
 		return (short) Math.min(Math.max(resultInRange, Short.MIN_VALUE), Short.MAX_VALUE);
 	}
 
+	
+	/** 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return double
+	 */
 	public double smoothNoise(double x, double y, double z) {
 		// Offset each coordinate by the seed value
 		x += this.seed;
@@ -160,14 +210,34 @@ public class NoiseGenerator {
 										grad(p[BB + 1], x - 1, 	y - 1, 	z - 1	))));
 	}
 
+	
+	/** 
+	 * @param t
+	 * @return double
+	 */
 	private double fade(double t) {
 		return t * t * t * (t * (t * 6 - 15) + 10);
 	}
 
+	
+	/** 
+	 * @param t
+	 * @param a
+	 * @param b
+	 * @return double
+	 */
 	private double lerp(double t, double a, double b) {
 		return a + t * (b - a);
 	}
 
+	
+	/** 
+	 * @param hash
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return double
+	 */
 	private double grad(int hash, double x, double y, double z) {
 		int h = hash & 15; // CONVERT LO 4 BITS OF HASH CODE
 		double u = h < 8 ? x : y, // INTO 12 GRADIENT DIRECTIONS.
