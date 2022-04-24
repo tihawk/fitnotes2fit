@@ -161,7 +161,7 @@
         <executions>
             <execution>
                 <id>garmin</id>
-                <phase>install</phase>
+                <phase>initialize</phase>
                 <goals>
                     <goal>install-file</goal>
                 </goals>
