@@ -6,12 +6,12 @@
   <scm>
     <developerConnection>scm:git:git@github.com:tihawk/fitnotes2fit.git</developerConnection>
     <url>https://github.com/tihawk/fitnotes2fit</url>
-    <tag>HEAD</tag>
+    <tag>1.0.3</tag>
   </scm>
 
   <groupId>com.developination.fitnotes2fit</groupId>
   <artifactId>fitnotes2fit</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.0.3</version>
 
   <name>fitnotes2fit</name>
   <!-- FIXME change it to the project's website -->
