@@ -3,6 +3,7 @@ package com.developination.fitnotes2fit.FitNotesParser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,9 +36,9 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 public class FitNotesParser {
 
-  public static Map<String, int[]> EXERCISE_TO_FIT_CATEGORY_MAP = new HashMap<String, int[]>();
+  public static Map<String, int[]> EXERCISE_TO_FIT_CATEGORY_MAP;
     static {
-      Map<String, int[]> tempMap = new HashMap<String, int[]>();
+      Map<String, int[]> tempMap = new HashMap<>();
         tempMap.put( "Flat Barbell Bench Press",      new int[]{ ExerciseCategory.BENCH_PRESS, BenchPressExerciseName.BARBELL_BENCH_PRESS } );
         tempMap.put( "EZ-Bar Curl",                   new int[]{ ExerciseCategory.CURL, CurlExerciseName.STANDING_EZ_BAR_BICEPS_CURL } );
         tempMap.put( "Overhead Press",                new int[]{ ExerciseCategory.SHOULDER_PRESS, ShoulderPressExerciseName.OVERHEAD_BARBELL_PRESS } );
@@ -71,18 +72,18 @@ public class FitNotesParser {
         EXERCISE_TO_FIT_CATEGORY_MAP = Collections.unmodifiableMap( tempMap );
     }
 
-  
-  /** 
+
+  /**
    * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
-   * 
+   *
    * @param filepath
    * @return List<Activity>
    * @throws Exception
    */
   public static List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
-    List<Activity> result = new ArrayList<Activity>();
+    List<Activity> result = new ArrayList<>();
     List<FitNotesSet> setsList = readFileNotesSets(filepath);
-    Map<String, List<ActivitySet>> mapDateToSets = new HashMap<String, List<ActivitySet>>();
+    Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
 
     for (FitNotesSet singleSet : setsList) {
       ActivitySet parsedSet = convertFromFitNotesSet(singleSet);
@@ -90,7 +91,7 @@ public class FitNotesParser {
       if (mapDateToSets.containsKey(singleSet.getDate())) {
         mapDateToSets.get(singleSet.getDate()).add(parsedSet);
       } else {
-        List<ActivitySet> newList = new ArrayList<ActivitySet>(1);
+        List<ActivitySet> newList = new ArrayList<>(1);
         newList.add(parsedSet);
         mapDateToSets.put(singleSet.getDate(), newList);
       }
@@ -101,14 +102,47 @@ public class FitNotesParser {
         DataConverter.convertDateTime(mapEntry.getKey()), mapEntry.getValue());
       result.add(activity);
     }
-    
+
     return result;
   }
 
-  
-  /** 
+  /**
+   * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
+   *
+   * @param fileContent
+   * @return List<Activity>
+   * @throws Exception
+   */
+  public static List<Activity> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
+    List<Activity> result = new ArrayList<>();
+    List<FitNotesSet> setsList = readFileNotesSets(fileContent);
+    Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
+
+    for (FitNotesSet singleSet : setsList) {
+      ActivitySet parsedSet = convertFromFitNotesSet(singleSet);
+
+      if (mapDateToSets.containsKey(singleSet.getDate())) {
+        mapDateToSets.get(singleSet.getDate()).add(parsedSet);
+      } else {
+        List<ActivitySet> newList = new ArrayList<>(1);
+        newList.add(parsedSet);
+        mapDateToSets.put(singleSet.getDate(), newList);
+      }
+    }
+
+    for (Map.Entry<String, List<ActivitySet>> mapEntry : mapDateToSets.entrySet()) {
+      Activity activity = new Activity(
+              DataConverter.convertDateTime(mapEntry.getKey()), mapEntry.getValue());
+      result.add(activity);
+    }
+
+    return result;
+  }
+
+
+  /**
    * Converts a parsed FitNotes set object into an Activity set, encodable into the FIT format
-   * 
+   *
    * @param fitNotesSet
    * @return ActivitySet
    */
@@ -129,10 +163,10 @@ public class FitNotesParser {
     return result;
   }
 
-  
-  /** 
+
+  /**
    * Reads a FitNotes csv file into a list of FitNotes sets
-   * 
+   *
    * @param filepath
    * @return List<FitNotesSet>
    * @throws Exception
@@ -149,5 +183,25 @@ public class FitNotesParser {
     reader.close();
     return list;
   }
-  
+
+  /**
+   * Reads a FitNotes csv file into a list of FitNotes sets
+   *
+   * @param fileContent
+   * @return List<FitNotesSet>
+   * @throws Exception
+   */
+  public static List<FitNotesSet> readFileNotesSets(byte[] fileContent) throws Exception {
+    Reader reader = new StringReader(new String(fileContent));
+    CsvToBean<FitNotesSet> csvReader = new CsvToBeanBuilder<FitNotesSet>(reader)
+            .withType(FitNotesSet.class)
+            .withIgnoreLeadingWhiteSpace(true)
+            .withSeparator(',')
+            .withIgnoreLeadingWhiteSpace(true)
+            .build();
+    List<FitNotesSet> list = csvReader.parse();
+    reader.close();
+    return list;
+  }
+
 }
