@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +35,11 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 public class FitNotesParser {
 
-  public static Map<String, int[]> EXERCISE_TO_FIT_CATEGORY_MAP;
-    static {
+  public FitNotesParser () {
+  }
+
+  public Map<String, int[]> EXERCISE_TO_FIT_CATEGORY_MAP;
+    {
       Map<String, int[]> tempMap = new HashMap<>();
         tempMap.put( "Flat Barbell Bench Press",      new int[]{ ExerciseCategory.BENCH_PRESS, BenchPressExerciseName.BARBELL_BENCH_PRESS } );
         tempMap.put( "EZ-Bar Curl",                   new int[]{ ExerciseCategory.CURL, CurlExerciseName.STANDING_EZ_BAR_BICEPS_CURL } );
@@ -69,7 +71,7 @@ public class FitNotesParser {
         tempMap.put( "Russian Twist",                 new int[]{ ExerciseCategory.CORE, CoreExerciseName.RUSSIAN_TWIST } );
         tempMap.put( "Concentration Curl",            new int[]{ ExerciseCategory.CURL, CurlExerciseName.SEATED_DUMBBELL_BICEPS_CURL } );
 
-        EXERCISE_TO_FIT_CATEGORY_MAP = Collections.unmodifiableMap( tempMap );
+        EXERCISE_TO_FIT_CATEGORY_MAP = tempMap ;
     }
 
 
@@ -80,7 +82,7 @@ public class FitNotesParser {
    * @return List<Activity>
    * @throws Exception
    */
-  public static List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
+  public List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
     List<Activity> result = new ArrayList<>();
     List<FitNotesSet> setsList = readFileNotesSets(filepath);
     Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
@@ -113,7 +115,7 @@ public class FitNotesParser {
    * @return List<Activity>
    * @throws Exception
    */
-  public static List<Activity> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
+  public List<Activity> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
     List<Activity> result = new ArrayList<>();
     List<FitNotesSet> setsList = readFileNotesSets(fileContent);
     Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
@@ -146,7 +148,7 @@ public class FitNotesParser {
    * @param fitNotesSet
    * @return ActivitySet
    */
-  public static ActivitySet convertFromFitNotesSet(FitNotesSet fitNotesSet) {
+  public ActivitySet convertFromFitNotesSet(FitNotesSet fitNotesSet) {
     if (!EXERCISE_TO_FIT_CATEGORY_MAP.containsKey(fitNotesSet.getExercise())) {
       System.out.println("[FitNotesParser][convertFromFitNotesSet] Didn't find mapping for exercise " + fitNotesSet.getExercise());
       return null;

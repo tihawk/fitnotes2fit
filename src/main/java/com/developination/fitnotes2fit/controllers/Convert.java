@@ -59,7 +59,8 @@ public class Convert implements Runnable {
 
     System.out.println( "On it!" );
     try {
-        List<Activity> activityList = FitNotesParser.parseFileNotesIntoActivities(file);
+        FitNotesParser parser = new FitNotesParser();
+        List<Activity> activityList = parser.parseFileNotesIntoActivities(file);
         for (Activity activity : activityList) {
             System.out.println("[main] Starting to encode activity: " + activity.getActivityName());
             ActivityEncoder encoder = new ActivityEncoder(activity, avgHeartRate, avgRestTime);
