@@ -1,6 +1,7 @@
 package com.developination.fitnotes2fit.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.developination.fitnotes2fit.ActivityEncoder.ActivityEncoder;
 import com.developination.fitnotes2fit.FitNotesParser.FitNotesParser;
@@ -29,6 +30,14 @@ public class Convert implements Runnable {
     description = "Average rest time between sets in minutes (e.g. 1.5). Don't think too hard on it, in the output it's randomised within plus-minus 1 minute. Same as for the heart-rate, this is useful when calculating Relative Effort and other metrics."
   )
   private float avgRestTime;
+  @Option(
+    names = {"--mapping", "-m"},
+    split = ",",
+    arity = "0..1",
+    interactive = true,
+    description = "Option to enable more exercises. Comma-separated pairs of <FitNotes_name>=<FIT_name>. Example: -m \"Flat Dumbbell Fly\"=DUMBBELL_FLYE,\"Pull Up\"=PULL_UP"
+  )
+  private Map<String, String> userMap;
 
   @Override
   public void run() {
@@ -59,7 +68,7 @@ public class Convert implements Runnable {
 
     System.out.println( "On it!" );
     try {
-        FitNotesParser parser = new FitNotesParser();
+        FitNotesParser parser = new FitNotesParser(userMap);
         List<Activity> activityList = parser.parseFileNotesIntoActivities(file);
         for (Activity activity : activityList) {
             System.out.println("[main] Starting to encode activity: " + activity.getActivityName());
