@@ -8,8 +8,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.developination.fitnotes2fit.models.Activity;
 import com.developination.fitnotes2fit.models.ActivitySet;
@@ -51,6 +53,8 @@ import com.garmin.fit.TricepsExtensionExerciseName;
 import com.garmin.fit.WarmUpExerciseName;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class FitNotesParser {
 
@@ -181,12 +185,16 @@ public class FitNotesParser {
     return map;
   }
 
-  private List<Activity> _parseFileNotesIntoActivities(List<FitNotesSet> setsList) throws Exception {
+  private ImmutablePair<List<Activity>, Set<String>> _parseFileNotesIntoActivities(List<FitNotesSet> setsList) throws Exception {
     List<Activity> result = new ArrayList<>();
     Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
 
+    Set<String> unsupportedExercises = new HashSet<>();
     for (FitNotesSet singleSet : setsList) {
       ActivitySet parsedSet = convertFromFitNotesSet(singleSet);
+      if (parsedSet == null){
+        unsupportedExercises.add(singleSet.getExercise());
+      }
 
       if (mapDateToSets.containsKey(singleSet.getDate())) {
         mapDateToSets.get(singleSet.getDate()).add(parsedSet);
@@ -203,7 +211,8 @@ public class FitNotesParser {
       result.add(activity);
     }
 
-    return result;
+    ImmutablePair<List<Activity>, Set<String>> pair = new ImmutablePair<>(result, unsupportedExercises);
+    return pair;
   }
 
 
@@ -214,7 +223,7 @@ public class FitNotesParser {
    * @return List<Activity>
    * @throws Exception
    */
-  public List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
+  public ImmutablePair<List<Activity>, Set<String>> parseFileNotesIntoActivities(String filepath) throws Exception {
     List<FitNotesSet> setsList = readFileNotesSets(filepath);
     return _parseFileNotesIntoActivities(setsList);
   }
@@ -227,7 +236,7 @@ public class FitNotesParser {
    * @throws Exception
    */
 
-  public List<Activity> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
+  public ImmutablePair<List<Activity>, Set<String>> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
     List<FitNotesSet> setsList = readFileNotesSets(fileContent);
     return _parseFileNotesIntoActivities(setsList);
   }
@@ -241,7 +250,6 @@ public class FitNotesParser {
    */
   public ActivitySet convertFromFitNotesSet(FitNotesSet fitNotesSet) {
     if (!this.exercise_to_fit_category_map.containsKey(fitNotesSet.getExercise())) {
-      System.out.println("[FitNotesParser][convertFromFitNotesSet] Didn't find mapping for exercise " + fitNotesSet.getExercise());
       return null;
     }
     ActivitySet result = new ActivitySet();

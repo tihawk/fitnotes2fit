@@ -2,10 +2,13 @@ package com.developination.fitnotes2fit.controllers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.developination.fitnotes2fit.ActivityEncoder.ActivityEncoder;
 import com.developination.fitnotes2fit.FitNotesParser.FitNotesParser;
 import com.developination.fitnotes2fit.models.Activity;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -38,6 +41,11 @@ public class Convert implements Runnable {
     description = "Option to enable more exercises. Comma-separated pairs of <FitNotes_name>=<FIT_name>. Example: -m \"Flat Dumbbell Fly\"=DUMBBELL_FLYE,\"Pull Up\"=PULL_UP"
   )
   private Map<String, String> userMap;
+  @Option(
+    names = {"--strict", "-s"},
+    description = "Set this flag to halt execution if any exercises can't be converted due to missing mappings."
+  )
+  private Boolean strict;
 
   @Override
   public void run() {
@@ -69,7 +77,21 @@ public class Convert implements Runnable {
     System.out.println( "On it!" );
     try {
         FitNotesParser parser = new FitNotesParser(userMap);
-        List<Activity> activityList = parser.parseFileNotesIntoActivities(file);
+        ImmutablePair<List<Activity>, Set<String>> pair = parser.parseFileNotesIntoActivities(file);
+        List<Activity> activityList = pair.left;
+        Set<String> unsupportedExercises = pair.right;
+
+        if (unsupportedExercises.size() > 0){
+          System.out.println("Didn't find mapping for exercises:");
+          for (String exercise: unsupportedExercises){
+              System.out.println(exercise);
+          }
+          if (strict){
+            System.out.println("Not converting as there are missing mappings and --strict was set.");
+            return;
+          }
+        }
+
         for (Activity activity : activityList) {
             System.out.println("[main] Starting to encode activity: " + activity.getActivityName());
             ActivityEncoder encoder = new ActivityEncoder(activity, avgHeartRate, avgRestTime);
