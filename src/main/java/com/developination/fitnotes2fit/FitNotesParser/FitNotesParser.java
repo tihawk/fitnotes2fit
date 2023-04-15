@@ -181,50 +181,8 @@ public class FitNotesParser {
     return map;
   }
 
-
-  /**
-   * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
-   *
-   * @param filepath
-   * @return List<Activity>
-   * @throws Exception
-   */
-  public List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
+  private List<Activity> _parseFileNotesIntoActivities(List<FitNotesSet> setsList) throws Exception {
     List<Activity> result = new ArrayList<>();
-    List<FitNotesSet> setsList = readFileNotesSets(filepath);
-    Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
-
-    for (FitNotesSet singleSet : setsList) {
-      ActivitySet parsedSet = convertFromFitNotesSet(singleSet);
-
-      if (mapDateToSets.containsKey(singleSet.getDate())) {
-        mapDateToSets.get(singleSet.getDate()).add(parsedSet);
-      } else {
-        List<ActivitySet> newList = new ArrayList<>(1);
-        newList.add(parsedSet);
-        mapDateToSets.put(singleSet.getDate(), newList);
-      }
-    }
-
-    for (Map.Entry<String, List<ActivitySet>> mapEntry : mapDateToSets.entrySet()) {
-      Activity activity = new Activity(
-        DataConverter.convertDateTime(mapEntry.getKey()), mapEntry.getValue());
-      result.add(activity);
-    }
-
-    return result;
-  }
-
-  /**
-   * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
-   *
-   * @param fileContent
-   * @return List<Activity>
-   * @throws Exception
-   */
-  public List<Activity> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
-    List<Activity> result = new ArrayList<>();
-    List<FitNotesSet> setsList = readFileNotesSets(fileContent);
     Map<String, List<ActivitySet>> mapDateToSets = new HashMap<>();
 
     for (FitNotesSet singleSet : setsList) {
@@ -246,6 +204,32 @@ public class FitNotesParser {
     }
 
     return result;
+  }
+
+
+  /**
+   * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
+   *
+   * @param filepath
+   * @return List<Activity>
+   * @throws Exception
+   */
+  public List<Activity> parseFileNotesIntoActivities(String filepath) throws Exception {
+    List<FitNotesSet> setsList = readFileNotesSets(filepath);
+    return _parseFileNotesIntoActivities(setsList);
+  }
+
+  /**
+   * Parses a FitNotes CSV file, and creates a list of Activities encodable into the FIT format
+   *
+   * @param fileContent
+   * @return List<Activity>
+   * @throws Exception
+   */
+
+  public List<Activity> parseFileNotesIntoActivities(byte[] fileContent) throws Exception {
+    List<FitNotesSet> setsList = readFileNotesSets(fileContent);
+    return _parseFileNotesIntoActivities(setsList);
   }
 
 
@@ -272,16 +256,7 @@ public class FitNotesParser {
     return result;
   }
 
-
-  /**
-   * Reads a FitNotes csv file into a list of FitNotes sets
-   *
-   * @param filepath
-   * @return List<FitNotesSet>
-   * @throws Exception
-   */
-  public static List<FitNotesSet> readFileNotesSets(String filepath) throws Exception {
-    Reader reader = new BufferedReader(new FileReader(filepath));
+  private static List<FitNotesSet> _readFileNotesSets(Reader reader) throws Exception {
     CsvToBean<FitNotesSet> csvReader = new CsvToBeanBuilder<FitNotesSet>(reader)
                 .withType(FitNotesSet.class)
                 .withIgnoreLeadingWhiteSpace(true)
@@ -296,21 +271,25 @@ public class FitNotesParser {
   /**
    * Reads a FitNotes csv file into a list of FitNotes sets
    *
+   * @param filepath
+   * @return List<FitNotesSet>
+   * @throws Exception
+   */
+  public static List<FitNotesSet> readFileNotesSets(String filepath) throws Exception {
+    Reader reader = new BufferedReader(new FileReader(filepath));
+    return _readFileNotesSets(reader);
+  }
+
+  /**
+   * Reads a FitNotes csv file into a list of FitNotes sets
+   *
    * @param fileContent
    * @return List<FitNotesSet>
    * @throws Exception
    */
   public static List<FitNotesSet> readFileNotesSets(byte[] fileContent) throws Exception {
     Reader reader = new StringReader(new String(fileContent));
-    CsvToBean<FitNotesSet> csvReader = new CsvToBeanBuilder<FitNotesSet>(reader)
-            .withType(FitNotesSet.class)
-            .withIgnoreLeadingWhiteSpace(true)
-            .withSeparator(',')
-            .withIgnoreLeadingWhiteSpace(true)
-            .build();
-    List<FitNotesSet> list = csvReader.parse();
-    reader.close();
-    return list;
+    return _readFileNotesSets(reader);
   }
 
 }
