@@ -45,7 +45,7 @@ public class Convert implements Runnable {
     names = {"--strict", "-s"},
     description = "Set this flag to halt execution if any exercises can't be converted due to missing mappings."
   )
-  private Boolean strict;
+  private Boolean strict = false;
 
   @Override
   public void run() {
