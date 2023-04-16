@@ -60,6 +60,9 @@ public class Convert implements Runnable {
         e.printStackTrace();
       }
     }
+    else if (this.avgHeartRate == -1){
+      this.avgHeartRate = 0;
+    }
     System.out.printf("Average Heart-rate=%s%n", this.avgHeartRate);
 
     if (this.avgRestTime == 0) {
@@ -71,6 +74,9 @@ public class Convert implements Runnable {
       } catch (Exception e) {
         e.printStackTrace();
       }
+    }
+    else if (this.avgRestTime == -1){
+      this.avgRestTime = 0;
     }
     System.out.printf("Average Rest time=%s%n", this.avgRestTime);
 
