@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.developination.fitnotes2fit.controllers.Convert;
+import com.developination.fitnotes2fit.controllers.ListExercises;
 import com.developination.fitnotes2fit.util.CLI;
 
 import picocli.CommandLine;
@@ -12,7 +13,8 @@ import picocli.CommandLine.Parameters;
 
 @Command(
     subcommands = {
-        Convert.class
+        Convert.class,
+        ListExercises.class
     }
 )
 public class fitnotes2fit implements Runnable {

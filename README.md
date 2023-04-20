@@ -21,15 +21,22 @@ This will show you the usage.
 
 ### Converting a CSV into a set of _fit_ files
 
-```java -jar fitnotes2fit.jar convert -i <path/to/file.csv> [-o <optional/output/dir/>] [-hr <average heartrate>] [-rt <average rest time (in minutes)>]```
+```java -jar fitnotes2fit.jar convert -i <path/to/file.csv> [-o <optional/output/dir/>] [-hr <average heartrate>] [-rt <average rest time (in minutes)>] [-m "<FitNotes exercise name>"=<FIT Exercise name>,"<FitNotes exercise name 2>"=<FIT Exercise name 2>,...]```
 
 - This will take the csv provided by `-i <path/to/file.csv>`, and will convert it to a set of fit files, one for each workout (distinguished by the _Date_ column in the csv).
 
 - The optional argument `-o <optional/output/dir/>` specifies the output folder. Otherwise the current directory will be used.
 
+- This tool supports a limited set of exercises (not including all of the default exercises in FitNotes) The optional argument `-m "<FitNotes exercise name>"=<FIT Exercise name>,...` adds exercises to the list of available mappings. Use this to ensure that all your exercises are mappable. Use the `list_exercises` command to understand the list of possible FIT exercise names.
+
 - The other two optional arguments are for "advanced" usage. If provided an average heart-rate, using `-hr <average heartrate>`, the converter will generate a set of "heart-rate-monitor" records around that average, and encode them within the output workouts.
 
 - Average rest time in minutes (e.g. 1.5) can be provided with `-rt <average rest time>`. If provided, a random rest around that time (plus minus 1 minute) will be generated for each set. This helps with encoding a more appropriate time for the workout, which is useful for example in Strava, where the Relative Effort metric uses the heart-rate and time of activity to be calculated.
+
+### Listing all possible FIT exercise names
+
+```java -jar fitnotes2fit.jar list_exercises```
+
 
 # For developers
 ## Building for yourself
@@ -51,9 +58,7 @@ Since the package relies on FitSDK, and the SDK is not available in any reposito
 
 ### Important limitations
 
-* Currently the one big problem, is that not all default exercises provided by FitNotes are being encoded in the fit category system. At least the defaults will be implemented soon enough. In the log of running the converter, these uncategorised exercises are mentioned.
-
-* This leaves the issue with customly-added to FitNotes exercises. For now, this is not the focus of development, but some possible user input option is conceivable.
+* Not all default FitNotes exercises are supported out of the box. In the log of running the converter, these uncategorised exercises are mentioned. It is up to the user to provide mappings from the FitNotes exercise names to `Fit` exercise names. Check out the `list_exercises` command and the `--mappings` option of the `convert` command to understand how. This also allows you to map non-default exercises from FitNotes.
 
 ## Readme TODO
 
