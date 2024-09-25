@@ -32,7 +32,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config_file: .github/tag-changelog-config.js
       - name: Build full jar
-        run: ./mvnw install:install-file -Dfile=lib/fit.jar -DgroupId=com.garmin -DartifactId=garmin-fit -Dversion=21.78.00 -Dpackaging=jar && ./mvnw compile assembly:single
+        run: ./mvnw compile assembly:single
       - name: Create release
         id: create_release
         uses: actions/create-release@latest
