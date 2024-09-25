@@ -10,8 +10,10 @@ public class FitNotesSet {
   protected String exercise;
   @CsvBindByName(column = "Category")
   protected String category;
-  @CsvBindByName(column = "Weight (kgs)"/* , required = true */)
+  @CsvBindByName(column = "Weight"/* , required = true */)
   protected float weight;
+  @CsvBindByName(column = "Weight Unit")
+  protected String weightUnit;
   @CsvBindByName(column = "Reps"/* , required = true */)
   protected int reps;
   @CsvBindByName(column = "Distance")
