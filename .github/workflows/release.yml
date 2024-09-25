@@ -32,7 +32,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config_file: .github/tag-changelog-config.js
       - name: Build full jar
-        run: ./mvnw compile assembly:single -Dprod
+        run: ./mvnw compile assembly:single
       - name: Create release
         id: create_release
         uses: actions/create-release@latest
